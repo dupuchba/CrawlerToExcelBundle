@@ -1,0 +1,24 @@
+# Bootstrap
+app/bootstrap*
+
+# Symfony directories
+vendor/*
+*/logs/*
+*/cache/*
+web/uploads/*
+web/bundles/*
+web/.htaccess
+bin
+composer.phar
+
+# Configuration files
+app/config/parameters.ini
+app/config/parameters.yml
+.vagrant
+
+# Vim files
+*.swp
+
+# Misc
+composer.lock
+
