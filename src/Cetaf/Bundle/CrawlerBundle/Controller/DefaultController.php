@@ -27,6 +27,22 @@ class DefaultController extends Controller
 			$result[$i]['telephone'] = $container->filter('div.bpInscTel > ul > li > strong > span')->text();	
 			$container = $container->nextAll();
 		}
+		$link = $crawler->filter('ul.blockGauge.sc > li.linkNext > a')->link();
+
+		$crawler = $client->click($link);
+	 	$container = $crawler->filter('li.visitCard.withVisual.sc');
+		for ($i = 20; $i < 40; $i++) {
+			$result[$i]['nom'] = $container->filter('h2.titleMain > a > span')->text();	
+			$result[$i]['adresse'] = $container->filter('div.localisationBlock > p')->text();	
+			$result[$i]['telephone'] = $container->filter('div.bpInscTel > ul > li > strong > span')->text();	
+			$container = $container->nextAll();
+		}		
+		var_dump($result);die();
+
+		$link = $crawler->selectLink('Page Suivante')->link();
+		var_dump($link);die();
+		$client->click($link);
+		var_dump($client);die();	
 		var_dump($result);
 		die();
         return array();
