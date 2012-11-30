@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\DomCrawler\Crawler;
 use Goutte\Client;
+use Cetaf\Bundle\CrawlerBundle\Entity\Shop;
 
 class DefaultController extends Controller
 {
@@ -16,43 +17,28 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-		$client = new Client();
-		$crawler = $client->request('GET', 'http://www.pagesjaunes.fr/activites/boulangerie-patisserie.html');
-		$pageNumber = $crawler->filter('div.navPagination.sc > ul.blockGauge.sc > li')->last()->text();
+        $client = new Client();
+        $crawler = $client->request('GET', 'http://www.pagesjaunes.fr/activites/boulangerie-patisserie.html');
+        $pageNumber = $crawler->filter('div.navPagination.sc > ul.blockGauge.sc > li')->last()->text();
 
-	 	$container = $crawler->filter('li.visitCard.withVisual.shadow');
-		$result = array();
+         $container = $crawler->filter('li.visitCard.withVisual.shadow');
+        $em = $this->getDoctrine()->getManager();
 
-		for ($j = 2; $j <= $pageNumber; $j++) {
-			for ($i = 0; $i < 10; $i++) {
-				$result[$j][$i]['nom'] = $container->filter('h2.titleMain > a > span')->text();	
-				$result[$j][$i]['adresse'] = $container->filter('div.dataCard.sc > div.localisationBlock > p')->text();	
-				$result[$j][$i]['telephone'] = $container->filter('div.dataCard.sc > div.contactBlock > ul > li > strong ')->text();	
-				$container = $container->nextAll();
-			}
-		$crawler = $client->request('GET', 'http://www.pagesjaunes.fr/activites/boulangerie-patisserie-page_'.$j.'.html');
-	 	$container = $crawler->filter('li.visitCard.withVisual.shadow');
-		}
-		var_dump($result);die();
-		$link = $crawler->filter('div.navPagination.sc > ul.blockGauge.sc > li')->last()->text();
-		var_dump($link);die();
+        for ($j = 2; $j <= $pageNumber; $j++) {
+            for ($i = 0; $i < 10; $i++) {
+                $shop = new Shop();
+                $shop->setShopName($container->filter('h2.titleMain > a > span')->text());
+                $shop->setShopAdress($container->filter('div.dataCard.sc > div.localisationBlock > p')->text());
+                $shop->setShopPhoneNumber($container->filter('div.dataCard.sc > div.contactBlock > ul > li > strong ')->text());
+                $container = $container->nextAll();
+            $em->persist($shop);
+            $em->flush();
+            }
+        $crawler = $client->request('GET', 'http://www.pagesjaunes.fr/activites/boulangerie-patisserie-page_'.$j.'.html');
+         $container = $crawler->filter('li.visitCard.withVisual.shadow');
+        set_time_limit(20);
+        }
 
-		$crawler = $client->click($link);
-	 	$container = $crawler->filter('li.visitCard.withVisual.sc');
-		for ($i = 20; $i < 40; $i++) {
-			$result[$i]['nom'] = $container->filter('h2.titleMain > a > span')->text();	
-			$result[$i]['adresse'] = $container->filter('div.localisationBlock > p')->text();	
-			$result[$i]['telephone'] = $container->filter('div.bpInscTel > ul > li > strong > span')->text();	
-			$container = $container->nextAll();
-		}		
-		var_dump($result);die();
-
-		$link = $crawler->selectLink('Page Suivante')->link();
-		var_dump($link);die();
-		$client->click($link);
-		var_dump($client);die();	
-		var_dump($result);
-		die();
         return array();
     }
 }

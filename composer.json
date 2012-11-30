@@ -19,7 +19,9 @@
         "jms/security-extra-bundle": "1.2.*",
         "jms/di-extra-bundle": "1.1.*",
         "sensio/buzz-bundle": "dev-master",
-        "fabpot/goutte": "dev-master"
+        "fabpot/goutte": "dev-master",
+        "stof/doctrine-extensions-bundle": "1.1.x-dev",
+	"willdurand/geocoder": "*"
     },
     "scripts": {
         "post-install-cmd": [

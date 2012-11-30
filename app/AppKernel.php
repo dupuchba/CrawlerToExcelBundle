@@ -22,7 +22,9 @@ class AppKernel extends Kernel
 
 			# third-party library
 			new Sensio\Bundle\BuzzBundle\SensioBuzzBundle(),
+			new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new Cetaf\Bundle\CrawlerBundle\CetafCrawlerBundle(),
+			//new Bazinga\Bundle\GeocoderBundle\BazingaGeocoderBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
