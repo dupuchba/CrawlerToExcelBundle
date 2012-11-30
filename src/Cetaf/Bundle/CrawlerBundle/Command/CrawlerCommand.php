@@ -28,19 +28,19 @@ class CrawlerCommand extends ContainerAwareCommand
         while (true) {
 			$dialog = $this->getHelperSet()->get('dialog');
 
-			$name = $dialog->ask(
+			$url = $dialog->ask(
 				$output,
 				'Please enter the <info>http://www.pagesjaunes.fr</info> url that you want to <error>parse</error>: '
 			);
 
-			$this->parse($name);
+			$this->parse($url);
 		}
     }
 
 	protected function parse($url)
 	{
         $client = new Client();
-        $crawler = $client->request('GET', $name);
+        $crawler = $client->request('GET', $url);
         $pageNumber = $crawler->filter('div.navPagination.sc > ul.blockGauge.sc > li')->last()->text();
 
         $container = $crawler->filter('li.visitCard.withVisual.shadow');
